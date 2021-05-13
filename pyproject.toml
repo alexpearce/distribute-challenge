@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "distribute-challenge"
+version = "0.1.0"
+description = "An implementation of Neuro's distribute challenge"
+authors = ["Alex Pearce <alex@alexpearce.me>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/alexpearce/distribute-challenge"
+repository = "https://github.com/alexpearce/distribute-challenge"
+keywords = ["distributed computing"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
