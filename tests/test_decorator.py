@@ -3,6 +3,7 @@ import inspect
 import pytest
 
 from distribute_challenge import Distributable, compute_this
+from distribute_challenge.execution_backends.local import LocalExecutionBackend
 
 
 def test_decoration_callable():
@@ -76,3 +77,20 @@ def test_computation():
     assert d.compute() == 4
     # Can compute multiple times
     assert d.compute() == 4
+
+
+def test_custom_backend():
+    """Distributable.compute should accept a custom backend instance."""
+
+    class TestBackend:
+        def __init__(self):
+            self.executed = False
+
+        def run(self, *args):
+            self.executed = True
+
+    backend = TestBackend()
+    assert not backend.executed
+    d = Distributable(lambda: 0, [], {})
+    d.compute(backend=backend)
+    assert backend.executed

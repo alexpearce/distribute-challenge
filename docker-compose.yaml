@@ -1,0 +1,22 @@
+# Run a Redis instance and Celery workers.
+version: "3"
+services:
+  redis:
+    image: redis:6
+    ports:
+    - "6379:6379"
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["poetry", "run", "celery", "-A", "distribute_challenge.execution_backends.celery", "worker"]
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+      # Suppress warning about running a super-user worker when using pickle
+      # serialisation
+      - C_FORCE_ROOT=1
+    volumes:
+      - .:/app
+    depends_on:
+      - redis

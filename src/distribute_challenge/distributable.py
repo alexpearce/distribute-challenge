@@ -2,6 +2,10 @@
 import functools
 import inspect
 
+import cloudpickle
+
+from .execution_backends import default_backend
+
 
 class Distributable:
     def __init__(self, func, args, kwargs):
@@ -21,13 +25,22 @@ class Distributable:
             args (tuple): Positional arguments to be passed to `func`.
             kwargs (dict): Keyword arguments to be passed to `func`.
         """
-        self._func = func
+        self._serialised_func = cloudpickle.dumps(func)
         self._args = args
         self._kwargs = kwargs
 
-    def compute(self):
-        """Return the evaluatation of the function."""
-        return self._func(*self._args, **self._kwargs)
+    def compute(self, backend=None):
+        """Return the evaluatation of the function.
+
+        Args:
+            backend: The execution platform to run the function on. The value
+            `None` results in the default backend being used, as defined by
+            `execution_backends.default_backend`. See `execution_backends` for
+            other options.
+        """
+        if backend is None:
+            backend = default_backend()
+        return backend.run(self._serialised_func, self._args, self._kwargs)
 
 
 def compute_this(func=None):
