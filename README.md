@@ -19,5 +19,7 @@ The `compute` call pushes the function and arguments on to a job queue which is
 monitored by the workers in the cluster. The first available worker pops jobs
 off the queue and the result is returned to the original caller.
 
+[![Tests](https://github.com/alexpearce/distribute-challenge/actions/workflows/tests.yml/badge.svg)](https://github.com/alexpearce/distribute-challenge/actions/workflows/tests.yml)
+
 [neuro]: https://www.getneuro.ai/
 [challenge]: https://github.com/neuro-ai-dev/distribute-challenge
