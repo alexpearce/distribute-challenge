@@ -48,8 +48,50 @@ The [Celery][celery] backend is more interesting:
 3. Workers push function results back to the original caller via a result
    backend (also Redis by default).
 
+## Development
+
+Package development is done using [Poetry][poetry]. Once you have that
+installed, clone the repository and install the package and its dependencies:
+
+```
+$ poetry install
+```
+
+If you're using the [Conda][conda] package management system you can create the
+base environment from the configuration provided before running Poetry:
+
+```
+$ conda env create -f environment.yaml
+$ poetry install
+```
+
+Running the test suite also generates a coverage report, which is required to
+be 100% for the tests to pass:
+
+```
+$ poetry run pytest --doctest-modules --cov
+```
+
+Some tests require a Celery worker instance and an associated message
+queue/result backend. The [Docker compose][docker-compose] configuration
+provided can be used to quickly set these up:
+
+```
+$ docker compose up
+```
+
+(Use <kbd>Ctrl</kbd> + <kbd>c</kbd> to stop all containers.)
+
+Tests that require Celery infrastructure can also be skipped:
+
+```
+$ poetry run pytest --doctest-modules --cov -m 'not celery'
+```
+
 [neuro]: https://www.getneuro.ai/
 [challenge]: https://github.com/neuro-ai-dev/distribute-challenge
 [cloudpickle]: https://github.com/cloudpipe/cloudpickle
 [celery]: https://docs.celeryproject.org/en/stable/index.html
 [redis]: https://redis.io/
+[poetry]: https://python-poetry.org/
+[conda]: https://docs.conda.io/en/latest/
