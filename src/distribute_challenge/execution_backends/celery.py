@@ -25,6 +25,8 @@ class CeleryConfig:
     broker_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost//")
     result_backend = os.environ.get("CELERY_RESULT_BACKEND", "redis")
     default_task_queue = "tasks"
+    worker_send_task_events = True
+    task_send_sent_event = True
 
 
 _app = celery.Celery(CeleryConfig.default_task_queue, config_source=CeleryConfig)

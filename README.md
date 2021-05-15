@@ -88,6 +88,60 @@ Tests that require Celery infrastructure can also be skipped:
 $ poetry run pytest --doctest-modules --cov -m 'not celery'
 ```
 
+
+## Benchmarking
+
+To select a number of task workers appropriate for your setup, the library
+ships with a stress-test tool.
+
+It uses the Docker Compose configuration to bring up groups of workers and
+measure the total system throughput over time. The results are plotted for
+different numbers of workers.
+
+**Note**: The tests can create several thousand Redis connections. This may
+exceed the default number of allowed file descriptors in your system. To
+increase it:
+
+```
+# macOS
+$ sudo launchctl limit maxfiles 65536 65536
+# Unix
+$ ulimit -n 65536
+```
+
+(This setting will be lost after a system reboot.)
+
+### Examples
+
+To test the number of workers from 1 to 10:
+
+```
+$ poetry run python -m distribute_challenge.benchmarking.load --max-workers 10
+```
+
+On a particular dual-core laptop with hyper-threading, this creates the
+following plot:
+
+![Throughput results for 1–10 workers.](.github/images/20210515-160026-1-to-10-workers-throughput.png)
+
+The throughput is fairly stable with up to 4 workers, by there's an increasing
+amount of noise above this as the CPU struggles to efficiently schedule and
+switch between tasks.
+
+This study can be easily extended to measure the throughput with 10 to 20
+workers:
+
+```
+$ poetry run python -m distribute_challenge.benchmarking.load --min-workers 10 --max-workers 20
+```
+
+This produces very noisy results:
+
+![Throughput results for 10–20 workers.](.github/images/20210515-153834-10-to-20-workers-throughput.png)
+
+We are seeing diminishing returns here, with even the peak throughput dipping
+below the number of workers for any given run.
+
 [neuro]: https://www.getneuro.ai/
 [challenge]: https://github.com/neuro-ai-dev/distribute-challenge
 [cloudpickle]: https://github.com/cloudpipe/cloudpickle

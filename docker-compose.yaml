@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["poetry", "run", "celery", "-A", "distribute_challenge.execution_backends.celery", "worker"]
+    command: ["poetry", "run", "celery", "--app=distribute_challenge.execution_backends.celery", "worker",  "--concurrency=1", "--events"]
     environment:
       - CELERY_BROKER_URL=redis://redis:6379
       - CELERY_RESULT_BACKEND=redis://redis:6379
