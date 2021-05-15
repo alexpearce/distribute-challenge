@@ -30,7 +30,7 @@ class Distributable:
         self._kwargs = kwargs
 
     def compute(self, backend=None):
-        """Return the evaluatation of the function.
+        """Return the evaluation of the function.
 
         Args:
             backend: The execution platform to run the function on. The value
